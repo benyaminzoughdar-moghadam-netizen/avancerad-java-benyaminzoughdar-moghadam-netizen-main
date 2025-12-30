@@ -1,3 +1,4 @@
+//commit 1
 package se.gritacademy.client;
 
 import java.util.Scanner;
@@ -39,4 +40,4 @@ public class MainClient {
         }
     }
 }
-//commit 1
+//commit 2
