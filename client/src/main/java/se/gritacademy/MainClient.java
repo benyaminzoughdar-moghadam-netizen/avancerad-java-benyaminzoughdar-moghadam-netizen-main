@@ -1,6 +1,9 @@
-//commit 1
-package se.gritacademy.client;
+package se.gritacademy;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Scanner;
 
 public class MainClient {
@@ -11,34 +14,45 @@ public class MainClient {
         while (true) {
             System.out.println("\n===== Fulköpings Köp & Sälj =====");
             System.out.println("1. Lista alla annonser");
-            System.out.println("2. Visa annons");
-            System.out.println("3. Skapa annons");
-            System.out.println("4. Ändra pris");
-            System.out.println("5. Radera annons");
             System.out.println("0. Avsluta");
             System.out.print("Välj: ");
 
             String choice = scanner.nextLine();
 
-            switch (choice) {
-                case "0":
-                    System.exit(0);
-                    break;
+            if ("1".equals(choice)) {
+                listAdsFromServer();
+            } else if ("0".equals(choice)) {
+                System.out.println("Hejdå!");
+                break;
+            } else {
+                System.out.println("Ogiltigt val.");
+            }
+        }
+    }
 
-                case "1":
-                case "2":
-                case "3":
-                case "4":
-                case "5":
-                    System.out.println("Funktion klar, kommunikation sker mot servern.");
-                    break;
+    private static void listAdsFromServer() {
+        try {
+            URL url = new URL("http://localhost:8080/ads");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
 
-                default:
-                    System.out.println("Ogiltigt val.");
+            int status = conn.getResponseCode();
+            System.out.println("HTTP status: " + status);
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream())
+            );
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
             }
 
+            reader.close();
+            conn.disconnect();
+
+        } catch (Exception e) {
+            System.out.println("Kunde inte ansluta till servern.");
         }
     }
 }
-//commit 2
-//commit 3
