@@ -2,7 +2,7 @@ package se.gritacademy.server;
 
 public class Ad {
 
-    private Long id;
+    private long id;
     private String subject;
     private String sellerName;
     private String sellerContact;
@@ -12,20 +12,11 @@ public class Ad {
     public Ad() {
     }
 
-    public Ad(Long id, String subject, String sellerName, String sellerContact, String description, double price) {
-        this.id = id;
-        this.subject = subject;
-        this.sellerName = sellerName;
-        this.sellerContact = sellerContact;
-        this.description = description;
-        this.price = price;
-    }
-
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

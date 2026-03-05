@@ -1,5 +1,7 @@
 package se.gritacademy.server;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,35 +10,73 @@ import java.util.List;
 @RequestMapping("/ads")
 public class AdController {
 
-    private final AdRepository repo = new AdRepository();
+    private final AdRepository repo;
 
-    // 1. Lista annonser
+    public AdController(AdRepository repo) {
+        this.repo = repo;
+    }
+
+    // 1.1 Lista alla annonser
     @GetMapping
-    public List<Ad> getAllAds() {
+    public List<Ad> getAll() {
         return repo.findAll();
     }
 
-    // 2. Visa en annons
+    // 1.2 Visa en annons
     @GetMapping("/{id}")
-    public Ad getAd(@PathVariable Long id) {
-        return repo.findById(id).orElse(null);
+    public ResponseEntity<Ad> getOne(@PathVariable long id) {
+        Ad ad = repo.findById(id);
+        if (ad == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok(ad);
     }
 
-    // 3. Skapa annons
-    @PostMapping
-    public Ad createAd(@RequestBody Ad ad) {
-        return repo.create(ad);
+    // 1.3 Skapa annons (JSON -> Ad)
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Ad> create(@RequestBody Ad ad) {
+
+        // enkel validering (G-nivå)
+        if (ad.getSubject() == null || ad.getSubject().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        if (ad.getSellerName() == null || ad.getSellerName().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        if (ad.getSellerContact() == null || ad.getSellerContact().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        if (ad.getDescription() == null) {
+            ad.setDescription("");
+        }
+        if (ad.getPrice() <= 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Ad saved = repo.save(ad);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    // 4. Ändra pris
-    @PutMapping("/{id}")
-    public Ad updatePrice(@PathVariable Long id, @RequestBody Ad ad) {
-        return repo.updatePrice(id, ad.getPrice()).orElse(null);
+    // 1.4 Ändra pris (body = "600" eller "600.5")
+    @PutMapping(value = "/{id}/price", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Ad> updatePrice(@PathVariable long id, @RequestBody String body) {
+
+        double newPrice;
+        try {
+            newPrice = Double.parseDouble(body.trim());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Ad updated = repo.updatePrice(id, newPrice);
+        if (updated == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        return ResponseEntity.ok(updated);
     }
 
-    // 5. Radera annons
+    // 1.5 Radera annons
     @DeleteMapping("/{id}")
-    public void deleteAd(@PathVariable Long id) {
-        repo.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        boolean deleted = repo.delete(id);
+        if (!deleted) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.noContent().build(); // 204
     }
 }

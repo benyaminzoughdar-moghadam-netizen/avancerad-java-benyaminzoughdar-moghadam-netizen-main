@@ -1,42 +1,38 @@
 package se.gritacademy.server;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.*;
 
+@Repository
 public class AdRepository {
 
-    private final Map<Long, Ad> ads = new LinkedHashMap<>();
-    private long nextId = 1;
+    private final Map<Long, Ad> ads = new HashMap<>();
+    private long currentId = 1;
 
-    // Hämta alla annonser
     public List<Ad> findAll() {
         return new ArrayList<>(ads.values());
     }
 
-    // Hämta annons via id
-    public Optional<Ad> findById(Long id) {
-        return Optional.ofNullable(ads.get(id));
+    public Ad findById(long id) {
+        return ads.get(id);
     }
 
-    // Skapa ny annons
-    public Ad create(Ad ad) {
-        ad.setId(nextId++);
+    public Ad save(Ad ad) {
+        ad.setId(currentId++);
         ads.put(ad.getId(), ad);
         return ad;
     }
 
-    // Uppdatera pris
-    public Optional<Ad> updatePrice(Long id, double newPrice) {
-        Ad existing = ads.get(id);
-        if (existing == null) {
-            return Optional.empty();
+    public Ad updatePrice(long id, double price) {
+        Ad ad = ads.get(id);
+        if (ad != null) {
+            ad.setPrice(price);
         }
-
-        existing.setPrice(newPrice);
-        return Optional.of(existing);
+        return ad;
     }
 
-    // Ta bort annons
-    public boolean delete(Long id) {
+    public boolean delete(long id) {
         return ads.remove(id) != null;
     }
 }
