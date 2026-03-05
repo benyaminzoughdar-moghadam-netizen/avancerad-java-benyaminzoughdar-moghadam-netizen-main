@@ -1,31 +1,71 @@
-//commit 6
 package se.gritacademy.server;
 
 public class Ad {
-    private long id;
-    private String title;
-    private String seller;
+
+    private Long id;
+    private String subject;
+    private String sellerName;
+    private String sellerContact;
     private String description;
     private double price;
-    private String pinCode;
 
-    public Ad() {}
-
-    public Ad(long id, String title, String seller, String description, double price, String pinCode) {
-        this.id = id;
-        this.title = title;
-        this.seller = seller;
-        this.description = description;
-        this.price = price;
-        this.pinCode = pinCode;
+    public Ad() {
     }
 
-    public long getId() { return id; }
-    public String getTitle() { return title; }
-    public String getSeller() { return seller; }
-    public String getDescription() { return description; }
-    public double getPrice() { return price; }
-    public String getPinCode() { return pinCode; }
+    public Ad(Long id, String subject, String sellerName, String sellerContact, String description, double price) {
+        this.id = id;
+        this.subject = subject;
+        this.sellerName = sellerName;
+        this.sellerContact = sellerContact;
+        this.description = description;
+        this.price = price;
+    }
 
-    public void setPrice(double price) { this.price = price; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
+    }
+
+    public String getSellerContact() {
+        return sellerContact;
+    }
+
+    public void setSellerContact(String sellerContact) {
+        this.sellerContact = sellerContact;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }

@@ -1,7 +1,5 @@
-//commit 4
 package se.gritacademy.server;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,53 +8,35 @@ import java.util.List;
 @RequestMapping("/ads")
 public class AdController {
 
-    private final AdRepository repository = new AdRepository();
+    private final AdRepository repo = new AdRepository();
 
+    // 1. Lista annonser
     @GetMapping
     public List<Ad> getAllAds() {
-        return repository.findAll();
+        return repo.findAll();
     }
 
+    // 2. Visa en annons
     @GetMapping("/{id}")
-    public ResponseEntity<Ad> getAd(@PathVariable long id) {
-        Ad ad = repository.findById(id);
-        if (ad == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(ad);
+    public Ad getAd(@PathVariable Long id) {
+        return repo.findById(id).orElse(null);
     }
 
+    // 3. Skapa annons
     @PostMapping
     public Ad createAd(@RequestBody Ad ad) {
-        return repository.save(ad);
+        return repo.create(ad);
     }
 
+    // 4. Ändra pris
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePrice(
-            @PathVariable long id,
-            @RequestParam String pin,
-            @RequestParam double price
-    ) {
-        Ad ad = repository.findById(id);
-        if (ad == null) return ResponseEntity.notFound().build();
-        if (!ad.getPinCode().equals(pin)) return ResponseEntity.status(403).build();
-
-        ad.setPrice(price);
-        return ResponseEntity.ok().build();
+    public Ad updatePrice(@PathVariable Long id, @RequestBody Ad ad) {
+        return repo.updatePrice(id, ad.getPrice()).orElse(null);
     }
 
+    // 5. Radera annons
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAd(
-            @PathVariable long id,
-            @RequestParam String pin
-    ) {
-        Ad ad = repository.findById(id);
-        if (ad == null) return ResponseEntity.notFound().build();
-        if (!ad.getPinCode().equals(pin)) return ResponseEntity.status(403).build();
-
-        repository.delete(id);
-        return ResponseEntity.ok().build();
+    public void deleteAd(@PathVariable Long id) {
+        repo.delete(id);
     }
 }
-//commit 9
-//commit 10
