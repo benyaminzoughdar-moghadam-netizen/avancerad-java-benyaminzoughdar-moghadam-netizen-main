@@ -1,17 +1,21 @@
-# Fulköpings Köp och Sälj
+# Fulköpings Köp & Sälj
 
-## Mål
-Ett köp- och sälj-system med Java Spring Boot-server och Java-klient.
+## Description
+Client-server application built with Java and Spring Boot.
 
-## Starta server
-Öppna server-projektet och kör ServerApplication.
+## Features
+- List ads
+- Show ad
+- Create ad
+- Update price
+- Delete ad
 
-## Starta klient
-Öppna client-projektet och kör MainClient.
+## Architecture
+Client (Java console) communicates with backend via REST API.
 
-## Funktioner
-- Lista annonser
-- Visa annons
-- Skapa annons
-- Ändra pris med pinkod
-- Radera annons med pinkod
+## Endpoints
+GET /ads
+GET /ads/{id}
+POST /ads
+PUT /ads/{id}/price
+DELETE /ads/{id}
